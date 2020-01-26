@@ -7,7 +7,7 @@ class FlaskWrap:
         CORS(self.flask)
 
     def set_handler(self, path, handle_func):
-        self.flask.add_url_rule(path, view_func=handle_func, 'GET', 'POST') 
+        self.flask.add_url_rule(path, view_func=handle_func, methods=['GET', 'POST']) 
     
     def debug_run(self):
         self.flask.run(port=8880, debug=True)
