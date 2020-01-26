@@ -1,0 +1,12 @@
+[Unit]
+Description=controll mpd api server
+After=network-online.target
+
+[Service]
+ExecStart=/home/pi/mochi/run.sh
+ExecStop=/bin/kill -INT ${MAINPID}
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
