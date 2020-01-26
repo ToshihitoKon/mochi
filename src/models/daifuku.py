@@ -4,6 +4,9 @@ import os
 root_path = '/home/pi'
 
 def handler_mochi_pull():
+    if request.method != 'POST':
+        return 'not allow no post request'
+
     path = os.path.join(root_path, 'mochi', 'pull.sh')
     if not os.path.isfile(path):
         return 'error: ' + path + ' not found'
@@ -15,6 +18,9 @@ def handler_mochi_pull():
     return 'success'
 
 def handler_kashiwa_pull():
+    if request.method != 'POST':
+        return 'not allow no post request'
+
     path = os.path.join(root_path, 'kashiwa', 'pull.sh')
     if not os.path.isfile(path):
         return 'error: ' + path + ' not found'
