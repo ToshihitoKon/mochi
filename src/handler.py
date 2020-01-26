@@ -4,17 +4,6 @@ from flask_cors import CORS
 from models.mpd import *
 from models.daifuku import *
 
-class FlaskWrap:
-    def __init__(self):
-        self.flask = Flask(__name__)
-        CORS(self.flask)
-
-    def set_handler(self, path, handle_func):
-        self.flask.add_url_rule(path, view_func=handle_func) 
-    
-    def debug_run(self):
-        self.flask.run(port=8880, debug=True)
-    
 class FlaskHandler:
     def __init__(self, path, handler_func):
         self.path = path

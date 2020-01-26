@@ -1,6 +1,17 @@
 #!/usr/bin/env python3
 from handler import *
 
+class FlaskWrap:
+    def __init__(self):
+        self.flask = Flask(__name__)
+        CORS(self.flask)
+
+    def set_handler(self, path, handle_func):
+        self.flask.add_url_rule(path, view_func=handle_func, 'GET', 'POST') 
+    
+    def debug_run(self):
+        self.flask.run(port=8880, debug=True)
+    
 flask = FlaskWrap()
 app = flask.flask
 
