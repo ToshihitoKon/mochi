@@ -10,7 +10,8 @@ def handler_mochi_pull():
     if not os.path.isfile(path):
         return 'error: ' + path + ' not found'
 
-    cp = subprocess.run(path, capture_output=True, text=True)
+    pipe = subprocess.PIPE
+    cp = subprocess.run(path, stdout=pipe, stderr=pipe, universal_newlines=True)
     if cp.returncode != 0:
         res = {
             'status': 'error: ' + path + ' return not 0',
@@ -31,7 +32,8 @@ def handler_kashiwa_pull():
     if not os.path.isfile(path):
         return 'error: ' + path + ' not found'
 
-    cp = subprocess.run(path, capture_output=True, text=True)
+    pipe = subprocess.PIPE
+    cp = subprocess.run(path, stdout=pipe, stderr=pipe, universal_newlines=True)
     if cp.returncode != 0:
         res = {
             'status': 'error: ' + path + ' return not 0',
