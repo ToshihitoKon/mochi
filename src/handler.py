@@ -5,12 +5,13 @@ from models.mpd import *
 from models.daifuku import *
 
 class FlaskHandler:
-    def __init__(self, path, handler_func):
+    def __init__(self, path, handler_func, methods=['GET' 'POST']):
         self.path = path
         self.handler_func = handler_func
+        self.methods = methods
 
     def to_set_handler(self):
-        return self.path, self.handler_func
+        return self.path, self.handler_func, self.methods
 
 def echo_handler(var='ok'):
     return var, 200
@@ -31,5 +32,5 @@ flask_handlers.append(FlaskHandler('/api/playlist/ls', handler_playlist_ls))
 flask_handlers.append(FlaskHandler('/api/playlist/select', handler_playlist_select))
 flask_handlers.append(FlaskHandler('/api/playlist/list', handler_playlist_list))
 
-flask_handlers.append(FlaskHandler('/daifuku/mochi/pull', handler_mochi_pull))
-flask_handlers.append(FlaskHandler('/daifuku/kashiwa/pull', handler_kashiwa_pull))
+flask_handlers.append(FlaskHandler('/daifuku/mochi/pull', handler_mochi_pull, ['POST']))
+flask_handlers.append(FlaskHandler('/daifuku/kashiwa/pull', handler_kashiwa_pull, ['POST']))

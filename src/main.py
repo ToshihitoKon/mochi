@@ -6,8 +6,8 @@ class FlaskWrap:
         self.flask = Flask(__name__)
         CORS(self.flask)
 
-    def set_handler(self, path, handle_func):
-        self.flask.add_url_rule(path, view_func=handle_func, methods=['GET', 'POST']) 
+    def set_handler(self, path, handle_func, methods):
+        self.flask.add_url_rule(path, view_func=handle_func, methods=methods) 
     
     def debug_run(self):
         self.flask.run(port=8880, debug=True)
@@ -16,8 +16,8 @@ flask = FlaskWrap()
 app = flask.flask
 
 for flask_handler in flask_handlers:
-    path, handler = flask_handler.to_set_handler()
-    flask.set_handler(path, handler)
+    path, handler, methods = flask_handler.to_set_handler()
+    flask.set_handler(path, handler, methods)
 
 if __name__ == '__main__':
     flask.debug_run()
