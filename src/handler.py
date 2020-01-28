@@ -5,7 +5,7 @@ from models.mpd import *
 from models.daifuku import *
 
 class FlaskHandler:
-    def __init__(self, path, handler_func, methods=['GET' 'POST']):
+    def __init__(self, path, handler_func, methods=['GET','POST']):
         self.path = path
         self.handler_func = handler_func
         self.methods = methods
