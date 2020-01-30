@@ -68,3 +68,24 @@ def handler_kashiwa_pull():
         'stderr': cp.stderr
     }
     return json.dumps(res, ensure_ascii=False)
+
+def handler_kashiwa_version():
+    path = os.path.join(root_path, 'kashiwa', 'version.sh')
+    if not os.path.isfile(path):
+        return 'error: ' + path + ' not found'
+
+    cp = subprocess.run(path, stdout=pipe, stderr=pipe, universal_newlines=True)
+    if cp.returncode != 0:
+        res = {
+            'status': 'error: ' + path + ' return not 0',
+            'stdout': cp.stdout,
+            'stderr': cp.stderr
+        }
+        return json.dumps(res, ensure_ascii=False)
+
+    res = {
+        'status': 'success',
+        'stdout': cp.stdout,
+        'stderr': cp.stderr
+    }
+    return json.dumps(res, ensure_ascii=False)
