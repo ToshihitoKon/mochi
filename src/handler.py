@@ -20,6 +20,7 @@ flask_handlers = []
 
 flask_handlers.append(FlaskHandler('/echo', echo_handler))
 
+# mpd api
 flask_handlers.append(FlaskHandler('/api/toggle', handler_toggle))
 flask_handlers.append(FlaskHandler('/api/status', handler_status))
 flask_handlers.append(FlaskHandler('/api/next', handler_next))
@@ -32,5 +33,7 @@ flask_handlers.append(FlaskHandler('/api/playlist/ls', handler_playlist_ls))
 flask_handlers.append(FlaskHandler('/api/playlist/select', handler_playlist_select))
 flask_handlers.append(FlaskHandler('/api/playlist/list', handler_playlist_list))
 
+# daifuku api
 flask_handlers.append(FlaskHandler('/daifuku/mochi/pull', handler_mochi_pull, ['POST']))
+flask_handlers.append(FlaskHandler('/daifuku/mochi/version', handler_mochi_version, ['POST']))
 flask_handlers.append(FlaskHandler('/daifuku/kashiwa/pull', handler_kashiwa_pull, ['POST']))
