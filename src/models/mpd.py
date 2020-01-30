@@ -64,7 +64,7 @@ def handler_cancel_sleep_timer():
     return json.dumps(payload, ensure_ascii=False), 200
 
 def handler_volume():
-    volume = request.args.'num')
+    volume = request.args('num')
     if volume == None:
         output = subprocess.check_output(['mpc', 'volume'])
     else:
