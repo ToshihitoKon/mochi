@@ -54,7 +54,7 @@ def handler_prev():
     return json.dumps(payload, ensure_ascii=False), 200
 
 def handler_sleep_timer():
-    Popen("/home/pi/api-mpd/sleep.sh &", shell=True)
+    Popen("/home/pi/mochi/sleep.sh &", shell=True)
     payload = status_payload()
     return json.dumps(payload, ensure_ascii=False), 200
 
@@ -64,7 +64,7 @@ def handler_cancel_sleep_timer():
     return json.dumps(payload, ensure_ascii=False), 200
 
 def handler_volume():
-    volume = request.args.get('num')
+    volume = request.args.'num')
     if volume == None:
         output = subprocess.check_output(['mpc', 'volume'])
     else:
