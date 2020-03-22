@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
-from flask import Flask, request
-from flask_cors import CORS
-from models.mpd import *
-from models.daifuku import *
+from v1.models.mpd import *
+from v1.models.daifuku import *
 
 class FlaskHandler:
     def __init__(self, path, handler_func, methods=['GET','POST']):
