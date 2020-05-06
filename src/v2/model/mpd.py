@@ -52,8 +52,9 @@ class Mpd:
                 'single:\s+(?<sin>[^\s]+)\s+'
                 'consume:\s+(?<con>[^\s]+).*', status_line)
 
-        if status_match.group('vol').isdecimal():
-            self.volume = int(status_match.group('vol'))
+        volume = status_match.group('vol').replace('%', '')
+        if volume.isdecimal():
+            self.volume = int(volume)
         else:
             self.volume = -1
 
