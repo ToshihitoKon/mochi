@@ -17,6 +17,10 @@ class FlaskWrap:
 flask = FlaskWrap()
 app = flask.flask
 
+for router in blueprints:
+    flask.flask.register_blueprint(router)
+
+# v1の遺産
 for flask_handler in flask_handlers:
     path, handler, methods = flask_handler.to_set_handler()
     flask.set_handler(path, handler, methods)
