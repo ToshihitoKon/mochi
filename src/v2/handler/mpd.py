@@ -19,6 +19,18 @@ def prev():
     res = mpdmodel.Mpd().prev()
     return json.dumps(res, ensure_ascii=False), 200
 
+@mpd_router.route('/play/position', methods=['POST'])
+def play_position():
+    req = request.get_json()
+    if not req:
+        return json.dumps('', ensure_ascii=False), 400
+
+    if 'position' not in req:
+        return json.dumps('', ensure_ascii=False), 400
+
+    res = mpdmodel.Mpd().play_position(req["position"])
+    return json.dumps(res, ensure_ascii=False), 200
+
 @mpd_router.route('/status', methods=['GET'])
 def status():
     res = mpdmodel.Mpd().get_status()

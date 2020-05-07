@@ -126,6 +126,12 @@ class Mpd:
             return None
         return self.status_object()
 
+    def play_position(self, position):
+        res = subprocess.run(['mpc'] + format_option + ['play', str(position)] , stdout=subprocess.PIPE)
+        if not self.parse_mpc_output(res.stdout.decode('utf-8')):
+            return None
+        return self.status_object()
+
     def volume(self, volume):
         res = subprocess.run(['mpc'] + format_option + ['volume', str(volume)] , stdout=subprocess.PIPE)
         print(res.args)
