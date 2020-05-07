@@ -36,10 +36,12 @@ def playlist_list():
 
 @mpd_router.route('/volume', methods=['POST'])
 def volume():
-    if 'volume' not in request.form:
+    req = request.get_json()
+    if not req:
         return json.dumps('', ensure_ascii=False), 400
-    volume = request.form["volume"]
 
-    res = mpdmodel.Mpd().volume(volume)
-    print(volume)
+    if 'volume' not in req:
+        return json.dumps('', ensure_ascii=False), 400
+
+    res = mpdmodel.Mpd().volume(req["volume"])
     return json.dumps(res, ensure_ascii=False), 200

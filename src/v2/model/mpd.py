@@ -80,14 +80,14 @@ class Mpd:
         }
 
     def get_status(self):
-        res = subprocess.run(['mpc', 'status'] + format_option, stdout=subprocess.PIPE)
+        res = subprocess.run(['mpc'] + format_option + ['status'] , stdout=subprocess.PIPE)
         if not self.parse_mpc_output(res.stdout.decode('utf-8')):
             return None
         return self.status_object()
 
 
     def get_playlist(self):
-        res = subprocess.run(['mpc', 'playlist'] + format_option, stdout=subprocess.PIPE)
+        res = subprocess.run(['mpc'] + format_option + ['playlist'] , stdout=subprocess.PIPE)
         rows = res.stdout.decode('utf-8').splitlines()
 
         playlist = []
@@ -104,36 +104,37 @@ class Mpd:
         return playlist
 
     def get_playlist_list(self):
-        res = subprocess.run(['mpc', 'lsplaylist'], stdout=subprocess.PIPE)
+        res = subprocess.run(['mpc'] + format_option + ['lsplaylist'] , stdout=subprocess.PIPE)
         playlists = res.stdout.decode('utf-8').splitlines()
         return playlists
 
     def toggle_play(self):
-        res = subprocess.run(['mpc', 'toggle'] + format_option, stdout=subprocess.PIPE)
+        res = subprocess.run(['mpc'] + format_option + ['toggle'] , stdout=subprocess.PIPE)
         if not self.parse_mpc_output(res.stdout.decode('utf-8')):
             return None
         return self.status_object()
 
     def next(self):
-        res = subprocess.run(['mpc', 'next'] + format_option, stdout=subprocess.PIPE)
+        res = subprocess.run(['mpc'] + format_option + ['next'] , stdout=subprocess.PIPE)
         if not self.parse_mpc_output(res.stdout.decode('utf-8')):
             return None
         return self.status_object()
 
     def prev(self):
-        res = subprocess.run(['mpc', 'prev'] + format_option, stdout=subprocess.PIPE)
+        res = subprocess.run(['mpc'] + format_option + ['prev'] , stdout=subprocess.PIPE)
         if not self.parse_mpc_output(res.stdout.decode('utf-8')):
             return None
         return self.status_object()
 
     def volume(self, volume):
-        res = subprocess.run(['mpc', 'volume', volume] + format_option, stdout=subprocess.PIPE)
+        res = subprocess.run(['mpc'] + format_option + ['volume', str(volume)] , stdout=subprocess.PIPE)
+        print(res.args)
         if not self.parse_mpc_output(res.stdout.decode('utf-8')):
             return None
         return self.status_object()
 
     def playlist_select(self, playlist_name):
-        res = subprocess.run(['mpc', 'load', playlist_name] + format_option, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        res = subprocess.run(['mpc'] + format_option + ['load', playlist_name] , stdout=subprocess.PIPE)
         return res.returncode == 0
 
 if __name__ == '__main__':
