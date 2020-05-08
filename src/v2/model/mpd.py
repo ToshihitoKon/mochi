@@ -7,10 +7,13 @@ class Mpd:
     is_playing = False
     title = ''
     artist = ''
-    volume = 0
+    playlist_pos = -1
+    album = ''
+    filepath = ''
+    volume = -1
     position = ''
     length = ''
-    progress = 0
+    progress = -1
     repeat = False
     random = False
     single = False
@@ -31,8 +34,11 @@ class Mpd:
         elif len(rows) == 3:
             # song set
             song_line = rows[0].split('\t')
+            self.playlist_pos = song_line[0]
             self.title = song_line[1]
             self.artist = song_line[2]
+            self.album = song_line[3]
+            self.filepath =  song_line[4]
 
             player_line = rows[1]
             self.is_playing = (player_line.find('playing') != -1)
@@ -69,6 +75,9 @@ class Mpd:
                 'isplaying': self.is_playing,
                 'artist': self.artist,
                 'title': self.title,
+                'playlist_position': self.playlist_pos,
+                'album': self.album,
+                'filepath': self.filepath,
                 'position': self.position,
                 'total': self.length,
                 'progress': self.progress,
