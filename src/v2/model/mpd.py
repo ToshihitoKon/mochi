@@ -11,8 +11,8 @@ class Mpd:
     album = ''
     filepath = ''
     volume = -1
-    position = ''
-    length = ''
+    duration = -1
+    total = -1
     progress = -1
     repeat = False
     random = False
@@ -42,10 +42,14 @@ class Mpd:
 
             player_line = rows[1]
             self.is_playing = (player_line.find('playing') != -1)
-            position_length =  regex.search(r'(?P<pos>\d+:\d+)/(?P<len>\d+:\d+).*\((?P<per>\d+)%\)', player_line)
-            self.position = position_length.group('pos')
-            self.length = position_length.group('len')
-            self.progress = position_length.group('per')
+            song_length =  regex.search(r'(?P<dur>\d+:\d+)/(?P<tot>\d+:\d+).*\((?P<pro>\d+)%\)', player_line)
+            self.progress = song_length.group('pro')
+
+            split_duration = song_length.group('dur').split(':')
+            self.duration = int(split_duration[0])*60 + int(split_duration[1])
+            split_total = song_length.group('tot').split(':')
+            self.total = int(split_total[0])*60 + int(split_total[1])
+
 
             status_line = rows[2]
         else:
@@ -78,8 +82,8 @@ class Mpd:
                 'playlist_position': self.playlist_pos,
                 'album': self.album,
                 'filepath': self.filepath,
-                'position': self.position,
-                'total': self.length,
+                'duration': self.duration,
+                'total': self.total,
                 'progress': self.progress,
                 'volume': self.volume,
                 'repeat': self.repeat,
