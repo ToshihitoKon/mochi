@@ -156,6 +156,10 @@ class Mpd:
         res = subprocess.run(['mpc'] + format_option + ['load', playlist_name] , stdout=subprocess.PIPE)
         return res.returncode == 0
 
+    def crop(self):
+        res = subprocess.run(['mpc'] + format_option + ['crop'] , stdout=subprocess.PIPE)
+        return res.returncode == 0
+
 if __name__ == '__main__':
     mpd = Mpd()
     print(mpd.playlist_select('a'))

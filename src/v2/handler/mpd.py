@@ -46,6 +46,13 @@ def playlist_list():
     res = mpdmodel.Mpd().get_playlist_list()
     return json.dumps(res, ensure_ascii=False), 200
 
+@mpd_router.route('/crop', methods=['POST'])
+def crop():
+    if not mpdmodel.Mpd().crop():
+        return json.dumps("", ensure_ascii=False), 500
+    res = mpdmodel.Mpd().get_playlist()
+    return json.dumps(res, ensure_ascii=False), 200
+
 @mpd_router.route('/volume', methods=['POST'])
 def volume():
     req = request.get_json()
