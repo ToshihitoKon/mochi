@@ -3,4 +3,4 @@
 cd `dirname $0`
 
 git pull origin master
-systemctl restrt mochi
+systemctl restart mochi
