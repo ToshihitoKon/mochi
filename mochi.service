@@ -3,7 +3,7 @@ Description=controll mpd api server
 After=network-online.target
 
 [Service]
-ExecStart=/home/pi/mochi/run.sh
+ExecStart=/home/app/mochi/run.sh
 ExecStop=/bin/kill -INT ${MAINPID}
 Restart=always
 User=pi
