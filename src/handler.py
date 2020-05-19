@@ -2,11 +2,13 @@
 from v1.models import mpd as mpdv1
 from v1.models import daifuku as daifukuv1
 from v2.handler import mpd as mpdv2
+from v2.handler import okonomi as okonomi
 
 
 # v2
 blueprints = [
-    mpdv2.mpd_router
+    mpdv2.mpd_router,
+    okonomi.router
 ]
 
 ###

@@ -4,7 +4,7 @@ import json
 from flask import request
 
 pipe = subprocess.PIPE
-root_path = '/home/pi'
+root_path = '/home/app'
 
 def handler_mochi_pull():
     path = os.path.join(root_path, 'mochi', 'pull.sh')
