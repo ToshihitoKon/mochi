@@ -56,7 +56,7 @@ class Mpd:
             return False
 
         status_match = regex.search(
-                r'volume:\s+(?<vol>[^\s]+)\s+'
+                r'volume:\s*(?<vol>[^\s]+)\s+'
                 'repeat:\s+(?<rep>[^\s]+)\s+'
                 'random:\s+(?<ran>[^\s]+)\s+'
                 'single:\s+(?<sin>[^\s]+)\s+'
@@ -160,6 +160,15 @@ class Mpd:
         res = subprocess.run(['mpc'] + format_option + ['crop'] , stdout=subprocess.PIPE)
         return res.returncode == 0
 
+    def set_player_mode(self, mode, state):
+        if not mode in ['single', 'consume', 'random', 'repeat']:
+            return None
+
+        res = subprocess.run(['mpc'] + format_option + [mode, str(bool(state))] , stdout=subprocess.PIPE)
+        if not self.parse_mpc_output(res.stdout.decode('utf-8')):
+            return None
+        return self.status_object()
+
 if __name__ == '__main__':
     mpd = Mpd()
-    print(mpd.playlist_select('a'))
+    print(mpd.set_player_mode('single', 1))

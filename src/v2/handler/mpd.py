@@ -78,3 +78,18 @@ def volume():
 
     res = mpdmodel.Mpd().volume(req["volume"])
     return json.dumps(res, ensure_ascii=False), 200
+
+@mpd_router.route('/mode', methods=['POST'])
+def mode():
+    req = request.get_json()
+    if not req:
+        return json.dumps('', ensure_ascii=False), 400
+    if 'mode' not in req:
+        return json.dumps('mode must be required', ensure_ascii=False), 400
+    if 'state' not in req:
+        return json.dumps('state must be required', ensure_ascii=False), 400
+
+    res = mpdmodel.Mpd().set_player_mode(req["mode"], req["state"])
+    if not res:
+        return json.dumps(res, ensure_ascii=False), 500
+    return json.dumps(res, ensure_ascii=False), 200
