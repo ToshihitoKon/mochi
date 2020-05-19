@@ -6,7 +6,7 @@ After=network-online.target
 ExecStart=/home/app/mochi/run.sh
 ExecStop=/bin/kill -INT ${MAINPID}
 Restart=always
-User=pi
+User=app
 
 [Install]
 WantedBy=multi-user.target
