@@ -3,17 +3,68 @@ cd `dirname $0`
 state_file="state"
 
 usase_exit(){
-    echo "Usase: $0 [get|set|toggle|list] key [set value]"
+    echo "Usase: $0 [get|getgroup|set|toggle|setgroup|list|listgroup] [args...]"
+    echo -e "\tget [keys...] : get value by key"
+    echo -e "\tgetgroup [groups...] : get value by group"
+    echo -e "\ttoggle [key] : toggle bool value by key"
+    echo -e "\tset [key] [value] (group) : set value to key"
+    echo -e "\tsetgroup [group] [keys...] : set group to key"
+    echo -e "\tlist : get existing keys"
+    echo -e "\tlistgroup : get existing groups"
+    exit 1
 }
 
-get_value(){
-    if [ ! "$1" ]; then
+_get_value_by_key(){
+    value=`echo "$state" | grep $'\t'"$key"$'\t' | sed -e 's/.*\t.*\t//g'`
+}
+
+_get_group_by_key(){
+    group=`echo "$state" | grep $'\t'"$key"$'\t' | sed -e 's/\t.*\t.*//g'`
+}
+
+_get_keys_by_group(){
+    keys=`echo "$state" | grep "^$group"$'\t'| sed -e 's/.*\t\(.*\)\t.*/\1/g'`
+}
+
+_set_value_and_group_by_key(){
+    if [ ! "$group" ]; then
+        _get_group_by_key
+    fi
+    sed $state_file -i -e "/^.*\t$key\t.*$/d"
+    echo -e "$group\t$key\t$value" >> $state_file
+}
+
+_set_group_to_key(){
+    _get_value_by_key
+    _set_value_and_group_by_key
+}
+
+get_value_by_keys(){
+    if [ "$#" -eq 0 ]; then
         usase_exit
         exit 1
     fi
-    key=$1
 
-    cat $state_file | grep "^$key"$'\t' | tr "\t" "\n"
+    for key in $@; do
+        _get_value_by_key
+        echo -e "$key\n$value"
+    done
+}
+
+get_value_by_groups(){
+    if [ "$#" -eq 0 ]; then
+        usase_exit
+        exit 1
+    fi
+    groups=$@
+
+    for group in $groups; do
+        _get_keys_by_group
+        for key in $keys; do
+            _get_value_by_key
+            echo -e "$key\n$value"
+        done
+    done
 }
 
 set_value(){
@@ -21,11 +72,12 @@ set_value(){
         usase_exit
         exit 1
     fi
+
     key=$1
     value=$2
+    group=$3
+    _set_value_and_group_by_key
 
-    sed $state_file -i -e "/^$key\t.*$/d"
-    echo -e "$key\t$value" >> $state_file
     echo -e "$key\n$value"
 }
 
@@ -35,9 +87,9 @@ toggle_value(){
         exit 1
     fi
     key=$1
+    _get_value_by_key
 
-    before=`cat $state_file | grep $key$'\t' | cut -f 2`
-    case "$before" in
+    case "$value" in
     0        ) value=1;;
     1        ) value=0;;
     [Ff]alse ) value=true;;
@@ -45,25 +97,80 @@ toggle_value(){
     *        ) exit 1;;
     esac
 
-    sed $state_file -i -e "/^$key\t.*$/d"
-    echo -e "$key\t$value" >> $state_file
+    _set_value_and_group_by_key
     echo -e "$key\n$value"
 }
 
+add_group(){
+    if [ ! "$1" -o ! "$2" ]; then
+        usase_exit
+    fi
+    key=$1
+    group=$2
+    _set_group_to_key
+    echo -e "$key\n$group"
+
+}
+
 list_keys(){
-    cat $state_file | sed -e 's/\t.*//g'
+    cat $state_file | sed -e 's/.*\t\(.*\)\t.*/\1/g'
+}
+
+list_group(){
+    cat $state_file | sed -e 's/\t.*\t.*//g' | grep -v "^$" | sort | uniq
+}
+
+_test(){
+    key=testkey
+    value=testvalue
+    group=testgroup
+
+    echo "> test _set_value_and_group_by_key"
+    _set_value_and_group_by_key
+    # refresh
+    state=`cat $state_file`
+    echo $group  $key $value
+
+    echo "> test _set_group_to_key"
+    group="testgroup2"
+    _set_group_to_key
+    # refresh
+    state=`cat $state_file`
+    echo $group  $key $value
+
+    echo "> test _get_value_by_key"
+    value=""
+    _get_value_by_key
+    echo $group  $key $value
+
+    echo "> test _get_group_by_key"
+    group=""
+    _get_group_by_key
+    echo $group  $key $value
+
+    echo "> test _get_group_by_key"
+    group=""
+    _get_group_by_key
+    echo $group  $key $value
+
 }
 
 if [ ! "$1" ];then
     usase_exit
 fi
+command=$1
 
 touch $state_file
+state=`cat $state_file`
 
-case "$1" in
-    "get"    ) get_value $2;;
-    "toggle" ) toggle_value $2;;
-    "set"    ) set_value $2 $3;;
-    "list"   ) list_keys;;
-    *        ) usase_exit ;;
+case "$command" in
+    "get"      ) shift 1; get_value_by_keys $*;;
+    "getgroup" ) shift 1; get_value_by_groups $*;;
+    "toggle"   ) toggle_value $2;;
+    "set"      ) shift 1; set_value $*;;
+    "setgroup" ) shift 1; add_group $*;;
+    "list"     ) list_keys;;
+    "listgroup") list_group;;
+    "test"     ) _test;;
+    *          ) usase_exit ;;
 esac
