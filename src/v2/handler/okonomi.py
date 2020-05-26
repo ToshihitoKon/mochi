@@ -45,7 +45,7 @@ def toggle():
         return json.dumps('key must be required', ensure_ascii=False), 400
     key = req['key']
 
-    res = model.Okonomi().toggle_value(key)
+    res = model.Okonomi().toggle_value(req['key'])
     return json.dumps(res, ensure_ascii=False), 200
 
 @router.route('/group/get', methods=['GET'])
