@@ -39,6 +39,13 @@ _set_group_to_key(){
     _set_value_and_group_by_key
 }
 
+_print_key_value(){
+    echo -e "$key\t$value"
+}
+
+_print_key_group(){
+    echo -e "$key\t$group"
+}
 get_value_by_keys(){
     if [ "$#" -eq 0 ]; then
         usase_exit
@@ -47,7 +54,7 @@ get_value_by_keys(){
 
     for key in $@; do
         _get_value_by_key
-        echo -e "$key\n$value"
+        _print_key_value
     done
 }
 
@@ -62,7 +69,7 @@ get_value_by_groups(){
         _get_keys_by_group
         for key in $keys; do
             _get_value_by_key
-            echo -e "$key\n$value"
+            _print_key_value
         done
     done
 }
@@ -77,8 +84,7 @@ set_value(){
     value=$2
     group=$3
     _set_value_and_group_by_key
-
-    echo -e "$key\n$value"
+    _print_key_value
 }
 
 toggle_value(){
@@ -98,7 +104,7 @@ toggle_value(){
     esac
 
     _set_value_and_group_by_key
-    echo -e "$key\n$value"
+    _print_key_value
 }
 
 add_group(){
@@ -108,7 +114,7 @@ add_group(){
     key=$1
     group=$2
     _set_group_to_key
-    echo -e "$key\n$group"
+    _print_key_group
 
 }
 
@@ -118,41 +124,6 @@ list_keys(){
 
 list_group(){
     cat $state_file | sed -e 's/\t.*\t.*//g' | grep -v "^$" | sort | uniq
-}
-
-_test(){
-    key=testkey
-    value=testvalue
-    group=testgroup
-
-    echo "> test _set_value_and_group_by_key"
-    _set_value_and_group_by_key
-    # refresh
-    state=`cat $state_file`
-    echo $group  $key $value
-
-    echo "> test _set_group_to_key"
-    group="testgroup2"
-    _set_group_to_key
-    # refresh
-    state=`cat $state_file`
-    echo $group  $key $value
-
-    echo "> test _get_value_by_key"
-    value=""
-    _get_value_by_key
-    echo $group  $key $value
-
-    echo "> test _get_group_by_key"
-    group=""
-    _get_group_by_key
-    echo $group  $key $value
-
-    echo "> test _get_group_by_key"
-    group=""
-    _get_group_by_key
-    echo $group  $key $value
-
 }
 
 if [ ! "$1" ];then
@@ -171,6 +142,5 @@ case "$command" in
     "setgroup" ) shift 1; add_group $*;;
     "list"     ) list_keys;;
     "listgroup") list_group;;
-    "test"     ) _test;;
     *          ) usase_exit ;;
 esac

@@ -8,7 +8,7 @@ router = Blueprint('okonomi', __name__, url_prefix='/api/v2/okonomi')
 def get():
     key = request.args.get('key')
     if key:
-        res = model.Okonomi().get_value(key)
+        res = model.Okonomi().get_value([key])
     else:
         res = model.Okonomi().list_keys()
 
@@ -22,11 +22,17 @@ def set():
 
     if 'key' not in req:
         return json.dumps('key must be required', ensure_ascii=False), 400
+    key = req['key']
 
     if 'value' not in req:
         return json.dumps('value must be required', ensure_ascii=False), 400
+    value = req['value']
 
-    res = model.Okonomi().set_value(key, value)
+    group = ''
+    if 'group' in req:
+        group = req['group']
+
+    res = model.Okonomi().set_value(key, value, group)
     return json.dumps(res, ensure_ascii=False), 200
 
 @router.route('/toggle', methods=['POST'])
@@ -37,6 +43,22 @@ def toggle():
 
     if 'key' not in req:
         return json.dumps('key must be required', ensure_ascii=False), 400
+    key = req['key']
 
     res = model.Okonomi().toggle_value(key)
+    return json.dumps(res, ensure_ascii=False), 200
+
+@router.route('/group/get', methods=['GET'])
+def group_get():
+    group = request.args.get('group')
+    if not group:
+        return json.dumps('', ensure_ascii=False), 400
+    else:
+        res = model.Okonomi().list_groups()
+
+    return json.dumps(res, ensure_ascii=False), 200
+
+@router.route('/group/list', methods=['GET'])
+def group_list():
+    res = model.Okonomi().list_groups()
     return json.dumps(res, ensure_ascii=False), 200
