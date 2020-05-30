@@ -20,6 +20,9 @@ _get_value_by_key(){
 
 _get_group_by_key(){
     group=`echo "$state" | grep $'\t'"$key"$'\t' | sed -e 's/\t.*\t.*//g'`
+    if [ ! "$group" ]; then
+        group='NOGROUP'
+    fi
 }
 
 _get_keys_by_group(){
