@@ -15,7 +15,7 @@ class Okonomi:
         return kv
 
     def get_group_value(self, group):
-        res = subprocess.run([ okonomi_dir + '/kvs.sh', 'get', group], stdout=subprocess.PIPE)
+        res = subprocess.run([ okonomi_dir + '/kvs.sh', 'getgroup', group], stdout=subprocess.PIPE)
 
         kv = []
         rows = res.stdout.decode('utf-8').splitlines()
@@ -51,6 +51,7 @@ class Okonomi:
 
 if __name__ == '__main__':
     print(Okonomi().get_value(['key', 'key3']))
+    print(Okonomi().list_groups())
     print(Okonomi().get_group_value('group'))
     print(Okonomi().set_value('key', 'false'))
     print(Okonomi().toggle_value('key'))

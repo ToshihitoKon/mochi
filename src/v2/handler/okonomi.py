@@ -54,7 +54,7 @@ def group_get():
     if not group:
         return json.dumps('', ensure_ascii=False), 400
     else:
-        res = model.Okonomi().list_groups()
+        res = model.Okonomi().get_group_value(group)
 
     return json.dumps(res, ensure_ascii=False), 200
 
