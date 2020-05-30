@@ -25,8 +25,8 @@ class Okonomi:
             kv.append({'key': key, 'value': value})
         return kv
 
-    def set_value(self, key, value):
-        res = subprocess.run([ okonomi_dir + '/kvs.sh', 'set', key, value] , stdout=subprocess.PIPE)
+    def set_value(self, key, value, group):
+        res = subprocess.run([ okonomi_dir + '/kvs.sh', 'set', key, value, group] , stdout=subprocess.PIPE)
         return {'key': key, 'value': value}
 
     def set_group(self, key, group):
