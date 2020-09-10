@@ -93,3 +93,14 @@ def mode():
     if not res:
         return json.dumps(res, ensure_ascii=False), 500
     return json.dumps(res, ensure_ascii=False), 200
+
+# TODO: 雑実装
+@mpd_router.route('/sleeptimer/reset', methods=['POST'])
+def sleeptimer_reset():
+    res =  mpdmodel.Mpd().reset_sleeptimer()
+    return json.dumps(res, ensure_ascii=False), 200
+
+@mpd_router.route('/sleeptimer/cancel', methods=['POST'])
+def sleeptimer_cancel():
+    res = mpdmodel.Mpd().cancel_sleeptimer()
+    return json.dumps(res, ensure_ascii=False), 200

@@ -1,8 +1,10 @@
 import subprocess
 import regex
 import pathlib
+import os
 
 format_option = ['-f', '%position%\t%title%\t%artist%\t%album%\t%file%']
+mochi_dir = os.path.expanduser('~/mochi')
 
 class Mpd:
     is_playing = False
@@ -19,11 +21,19 @@ class Mpd:
     random = False
     single = False
     consume = False
+    sleeptimer = False
     
     def parse_mpc_output(self, output):
         if output.find('ERROR') != -1:
             print("error: ", output)
             return False
+
+        res = subprocess.run("ps aux | grep sleep.sh | grep -v grep" , shell=True, stdout=subprocess.PIPE)
+        if not res.stdout.decode('utf-8'):
+            self.sleeptimer = False
+        else:
+            self.sleeptimer = True
+
 
         try:
             rows = output.splitlines()
@@ -93,7 +103,8 @@ class Mpd:
                 'repeat': self.repeat,
                 'random': self.random,
                 'single': self.single,
-                'consume': self.consume
+                'consume': self.consume,
+                'sleeptimer': self.sleeptimer
         }
 
     def get_status(self):
@@ -160,7 +171,6 @@ class Mpd:
 
     def volume(self, volume):
         res = subprocess.run(['mpc'] + format_option + ['volume', str(volume)] , stdout=subprocess.PIPE)
-        print(res.args)
         if not self.parse_mpc_output(res.stdout.decode('utf-8')):
             return None
         return self.status_object()
@@ -195,6 +205,20 @@ class Mpd:
                 entries.append({'path': str(p.relative_to(mpd_music_dir)), 'type': 'file'})
         return entries
 
-if __name__ == '__main__':
-    mpd = Mpd()
-    print(mpd.list_musicdir(''))
+    def reset_sleeptimer(self):
+        subprocess.run(['pkill' , 'sleep'])
+        subprocess.Popen([ mochi_dir + '/sleep.sh', '&'])
+
+        res = subprocess.run(['mpc'] + format_option + ['status'] , stdout=subprocess.PIPE)
+        if not self.parse_mpc_output(res.stdout.decode('utf-8')):
+            return None
+        return self.status_object()
+
+    def cancel_sleeptimer(self):
+        subprocess.run(['pkill' , 'sleep'])
+
+        res = subprocess.run(['mpc'] + format_option + ['status'] , stdout=subprocess.PIPE)
+        if not self.parse_mpc_output(res.stdout.decode('utf-8')):
+            return None
+        return self.status_object()
+
