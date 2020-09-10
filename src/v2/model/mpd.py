@@ -110,13 +110,22 @@ class Mpd:
         playlist = []
         for row in rows:
             split = row.split('\t')
-            playlist.append({
-                'position': split[0],
-                'title': split[1],
-                'artist': split[2],
-                'album': split[3],
-                'file': split[4],
-            })
+            if len(split) == 5:
+                playlist.append({
+                    'position': split[0],
+                    'title': split[1],
+                    'artist': split[2],
+                    'album': split[3],
+                    'file': split[4],
+                })
+            else:
+                playlist.append({
+                    'position': "",
+                    'title': "",
+                    'artist': "",
+                    'album': "",
+                    'file': "",
+                })
 
         return playlist
 
