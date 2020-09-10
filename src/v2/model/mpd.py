@@ -25,55 +25,58 @@ class Mpd:
             print("error: ", output)
             return False
 
-        rows = output.splitlines()
-        if len(rows) == 1:
-            # song not set
-            self.title = ''
-            self.artist = ''
-            self.is_playing = False
-            status_line = rows[0]
-        elif len(rows) == 3:
-            # song set
-            song_line = rows[0].split('\t')
-            self.playlist_pos = song_line[0]
-            self.title = song_line[1]
-            self.artist = song_line[2]
-            self.album = song_line[3]
-            self.filepath =  song_line[4]
+        try:
+            rows = output.splitlines()
+            if len(rows) == 1:
+                # song not set
+                self.title = ''
+                self.artist = ''
+                self.is_playing = False
+                status_line = rows[0]
+            elif len(rows) == 3:
+                # song set
+                song_line = rows[0].split('\t')
+                self.playlist_pos = song_line[0]
+                self.title = song_line[1]
+                self.artist = song_line[2]
+                self.album = song_line[3]
+                self.filepath =  song_line[4]
 
-            player_line = rows[1]
-            self.is_playing = (player_line.find('playing') != -1)
-            song_length =  regex.search(r'(?P<dur>\d+:\d+)/(?P<tot>\d+:\d+).*\((?P<pro>\d+)%\)', player_line)
-            self.progress = song_length.group('pro')
+                player_line = rows[1]
+                self.is_playing = (player_line.find('playing') != -1)
+                song_length =  regex.search(r'(?P<dur>\d+:\d+)/(?P<tot>\d+:\d+).*\((?P<pro>\d+)%\)', player_line)
+                self.progress = song_length.group('pro')
 
-            split_duration = song_length.group('dur').split(':')
-            self.duration = int(split_duration[0])*60 + int(split_duration[1])
-            split_total = song_length.group('tot').split(':')
-            self.total = int(split_total[0])*60 + int(split_total[1])
+                split_duration = song_length.group('dur').split(':')
+                self.duration = int(split_duration[0])*60 + int(split_duration[1])
+                split_total = song_length.group('tot').split(':')
+                self.total = int(split_total[0])*60 + int(split_total[1])
 
 
-            status_line = rows[2]
-        else:
+                status_line = rows[2]
+            else:
+                return False
+
+            status_match = regex.search(
+                    r'volume:\s*(?<vol>[^\s]+)\s+'
+                    'repeat:\s+(?<rep>[^\s]+)\s+'
+                    'random:\s+(?<ran>[^\s]+)\s+'
+                    'single:\s+(?<sin>[^\s]+)\s+'
+                    'consume:\s+(?<con>[^\s]+).*', status_line)
+
+            volume = status_match.group('vol').replace('%', '')
+            if volume.isdecimal():
+                self.volume = int(volume)
+            else:
+                self.volume = -1
+
+            self.repeat = status_match.group('rep') == "on"
+            self.random = status_match.group('ran') == "on"
+            self.single = status_match.group('sin') == "on"
+            self.consume = status_match.group('con') == "on"
+            return True
+        except:
             return False
-
-        status_match = regex.search(
-                r'volume:\s*(?<vol>[^\s]+)\s+'
-                'repeat:\s+(?<rep>[^\s]+)\s+'
-                'random:\s+(?<ran>[^\s]+)\s+'
-                'single:\s+(?<sin>[^\s]+)\s+'
-                'consume:\s+(?<con>[^\s]+).*', status_line)
-
-        volume = status_match.group('vol').replace('%', '')
-        if volume.isdecimal():
-            self.volume = int(volume)
-        else:
-            self.volume = -1
-
-        self.repeat = status_match.group('rep') == "on"
-        self.random = status_match.group('ran') == "on"
-        self.single = status_match.group('sin') == "on"
-        self.consume = status_match.group('con') == "on"
-        return True
 
     def status_object(self):
         return {
