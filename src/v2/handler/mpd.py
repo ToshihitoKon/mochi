@@ -104,3 +104,11 @@ def sleeptimer_reset():
 def sleeptimer_cancel():
     res = mpdmodel.Mpd().cancel_sleeptimer()
     return json.dumps(res, ensure_ascii=False), 200
+
+
+@mpd_router.route('/search/fetchall', methods=['GET'])
+def file_fetchall():
+    res = mpdmodel.Mpd().fetch_musicdir()
+    if not res:
+        return json.dumps(res, ensure_ascii=False), 500
+    return json.dumps(res, ensure_ascii=False), 200

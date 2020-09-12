@@ -6,6 +6,21 @@ import os
 format_option = ['-f', '%position%\t%title%\t%artist%\t%album%\t%file%']
 mochi_dir = os.path.expanduser('~/mochi')
 
+# listallのパース
+def nestedupdate(srcdict, destdict):
+    for k, v in srcdict.items():
+        if k in destdict:
+            if isinstance(destdict[k], dict):
+                return nestedupdate(v, destdict[k])
+            elif isinstance(destdict[k], list) and isinstance(v, list):
+                destdict[k].extend(v)
+            else:
+                destdict[k] = v
+        else:
+            destdict[k] = v
+    return destdict
+
+
 class Mpd:
     is_playing = False
     title = ''
@@ -192,18 +207,18 @@ class Mpd:
             return None
         return self.status_object()
 
-    def list_musicdir(self, path):
-        mpd_music_dir = '/var/lib/mpd/music'
-        entries = []
-        listpath = pathlib.Path(mpd_music_dir).joinpath(path)
-        if not listpath.is_dir():
-            return None
-        for p in list(listpath.iterdir()):
-            if p.is_dir():
-                entries.append({'path': str(p.relative_to(mpd_music_dir)), 'type': 'dir'})
-            else:
-                entries.append({'path': str(p.relative_to(mpd_music_dir)), 'type': 'file'})
-        return entries
+    def fetch_musicdir(self):
+        response_dict = dict()
+        res = subprocess.run(['mpc', 'listall'] , stdout=subprocess.PIPE)
+        for row in res.stdout.decode('utf-8').splitlines():
+            dirlist = row.split('/')
+            filename = dirlist.pop()
+            ld =  {'_files': [filename]}
+            for entry in reversed(dirlist):
+                ld = {entry: ld}
+            nestedupdate(ld,response_dict)
+
+        return response_dict
 
     def reset_sleeptimer(self):
         subprocess.run(['pkill' , 'sleep'])
