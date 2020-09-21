@@ -1,4 +1,4 @@
-from ..model import okonomi as model
+from . import okonomi as model
 from flask import Blueprint, request
 import json
 

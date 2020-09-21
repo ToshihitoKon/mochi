@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 from v1.models import mpd as mpdv1
 from v1.models import daifuku as daifukuv1
-from v2.handler import mpd as mpdv2
-from v2.handler import okonomi as okonomi
-from v2.handler import tako as tako
+from v2.music import handler as musicv2
+from v2.okonomi import handler as okonomi
+from v2.tako import handler as tako
 
 
 # v2
 blueprints = [
-    mpdv2.mpd_router,
+    musicv2.music_router,
     okonomi.router,
     tako.router
 ]

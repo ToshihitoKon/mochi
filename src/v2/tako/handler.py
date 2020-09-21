@@ -1,4 +1,4 @@
-from ..model import tako as model
+from . import tako as model
 from flask import Blueprint, request
 import json
 

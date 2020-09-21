@@ -1,25 +1,25 @@
-from ..model import mpd as mpdmodel
+from . import mpd as mpdmodel
 from flask import Blueprint, request
 import json
 
-mpd_router = Blueprint('mpd', __name__, url_prefix='/api/v2')
+music_router = Blueprint('music', __name__, url_prefix='/api/v2')
 
-@mpd_router.route('/toggle', methods=['POST'])
+@music_router.route('/toggle', methods=['POST'])
 def toggle():
     res = mpdmodel.Mpd().toggle_play()
     return json.dumps(res, ensure_ascii=False), 200
 
-@mpd_router.route('/next', methods=['POST'])
+@music_router.route('/next', methods=['POST'])
 def next():
     res = mpdmodel.Mpd().next()
     return json.dumps(res, ensure_ascii=False), 200
 
-@mpd_router.route('/prev', methods=['POST'])
+@music_router.route('/prev', methods=['POST'])
 def prev():
     res = mpdmodel.Mpd().prev()
     return json.dumps(res, ensure_ascii=False), 200
 
-@mpd_router.route('/play/position', methods=['POST'])
+@music_router.route('/play/position', methods=['POST'])
 def play_position():
     req = request.get_json()
     if not req:
@@ -31,22 +31,22 @@ def play_position():
     res = mpdmodel.Mpd().play_position(req["position"])
     return json.dumps(res, ensure_ascii=False), 200
 
-@mpd_router.route('/status', methods=['GET'])
+@music_router.route('/status', methods=['GET'])
 def status():
     res = mpdmodel.Mpd().get_status()
     return json.dumps(res, ensure_ascii=False), 200
 
-@mpd_router.route('/playlist/current', methods=['GET'])
+@music_router.route('/playlist/current', methods=['GET'])
 def playlist_current():
     res = mpdmodel.Mpd().get_playlist()
     return json.dumps(res, ensure_ascii=False), 200
 
-@mpd_router.route('/playlist/list', methods=['GET'])
+@music_router.route('/playlist/list', methods=['GET'])
 def playlist_list():
     res = mpdmodel.Mpd().get_playlist_list()
     return json.dumps(res, ensure_ascii=False), 200
 
-@mpd_router.route('/playlist/select', methods=['POST'])
+@music_router.route('/playlist/select', methods=['POST'])
 def playlist_select():
     req = request.get_json()
     if not req:
@@ -60,14 +60,14 @@ def playlist_select():
     res = mpdmodel.Mpd().get_playlist()
     return json.dumps(res, ensure_ascii=False), 200
 
-@mpd_router.route('/crop', methods=['POST'])
+@music_router.route('/crop', methods=['POST'])
 def crop():
     if not mpdmodel.Mpd().crop():
         return json.dumps("", ensure_ascii=False), 500
     res = mpdmodel.Mpd().get_playlist()
     return json.dumps(res, ensure_ascii=False), 200
 
-@mpd_router.route('/volume', methods=['POST'])
+@music_router.route('/volume', methods=['POST'])
 def volume():
     req = request.get_json()
     if not req:
@@ -79,7 +79,7 @@ def volume():
     res = mpdmodel.Mpd().volume(req["volume"])
     return json.dumps(res, ensure_ascii=False), 200
 
-@mpd_router.route('/mode', methods=['POST'])
+@music_router.route('/mode', methods=['POST'])
 def mode():
     req = request.get_json()
     if not req:
@@ -95,18 +95,18 @@ def mode():
     return json.dumps(res, ensure_ascii=False), 200
 
 # TODO: 雑実装
-@mpd_router.route('/sleeptimer/reset', methods=['POST'])
+@music_router.route('/sleeptimer/reset', methods=['POST'])
 def sleeptimer_reset():
     res =  mpdmodel.Mpd().reset_sleeptimer()
     return json.dumps(res, ensure_ascii=False), 200
 
-@mpd_router.route('/sleeptimer/cancel', methods=['POST'])
+@music_router.route('/sleeptimer/cancel', methods=['POST'])
 def sleeptimer_cancel():
     res = mpdmodel.Mpd().cancel_sleeptimer()
     return json.dumps(res, ensure_ascii=False), 200
 
 
-@mpd_router.route('/search/fetchall', methods=['GET'])
+@music_router.route('/search/fetchall', methods=['GET'])
 def file_fetchall():
     res = mpdmodel.Mpd().fetch_musicdir()
     if not res:
