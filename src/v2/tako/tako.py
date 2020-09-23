@@ -13,7 +13,7 @@ class Tako:
 
     def list_file(self):
         ls = os.listdir(save_dir)
-        return ls.remove('thumbnail')
+        return [x for x in ls if x != 'thumbnail']
 
     def serve_file(self, path):
         try:
