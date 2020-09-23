@@ -13,11 +13,11 @@ class Tako:
 
     def list_file(self):
         ls = os.listdir(save_dir)
-        return ls
+        return ls.remove('thumbnail')
 
     def serve_file(self, path):
         try:
-            return flask.send_file(os.path.join(save_dir, path), \
+            return flask.send_file(os.path.join(save_dir, 'thumbnail', path), \
                     as_attachment=False)
         except:
             return False
