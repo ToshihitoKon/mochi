@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-okonomi_dir = os.path.expanduser('~/mochi/okonomi')
+okonomi_dir = os.path.expanduser('~/okonomi')
 class Okonomi:
     def get_value(self, keys):
         res = subprocess.run([ okonomi_dir + '/kvs.sh', 'get'] + keys , stdout=subprocess.PIPE)

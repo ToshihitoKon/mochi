@@ -1,3 +1,4 @@
+import flask
 import os
 
 save_dir = os.path.expanduser('~/tako')
@@ -9,3 +10,17 @@ class Tako:
 
         data.save(os.path.join(save_dir, filename))
         return True
+
+    def list_file(self):
+        ls = os.listdir(save_dir)
+        return ls
+
+    def serve_file(self, path):
+        try:
+            return flask.send_file(os.path.join(save_dir, path), \
+                    as_attachment=False)
+        except:
+            return False
+        
+if __name__ == "__main__":
+    print(Tako().list_file())
