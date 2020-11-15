@@ -78,6 +78,7 @@ def queue_add():
     if not mpdmodel.Mpd().queue_add(req["path"]):
         return json.dumps("", ensure_ascii=False), 500
     res = mpdmodel.Mpd().get_playlist()
+    return json.dumps(res, ensure_ascii=False), 200
 
 @music_router.route('/volume', methods=['POST'])
 def volume():
