@@ -67,6 +67,18 @@ def crop():
     res = mpdmodel.Mpd().get_playlist()
     return json.dumps(res, ensure_ascii=False), 200
 
+@music_router.route('/queue/add', methods=['POST'])
+def queue_add():
+    req = request.get_json()
+    if not req:
+        return json.dumps('', ensure_ascii=False), 400
+    if 'path' not in req:
+        return json.dumps('', ensure_ascii=False), 400
+
+    if not mpdmodel.Mpd().queue_add(req["path"]):
+        return json.dumps("", ensure_ascii=False), 500
+    res = mpdmodel.Mpd().get_playlist()
+
 @music_router.route('/volume', methods=['POST'])
 def volume():
     req = request.get_json()

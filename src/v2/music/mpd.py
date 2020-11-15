@@ -198,6 +198,10 @@ class Mpd:
         res = subprocess.run(['mpc'] + format_option + ['crop'] , stdout=subprocess.PIPE)
         return res.returncode == 0
 
+    def queue_add(self, path):
+        res = subprocess.run(['mpc'] + format_option + ['add', str(path)] , stdout=subprocess.PIPE)
+        return res.returncode == 0
+
     def set_player_mode(self, mode, state):
         if not mode in ['single', 'consume', 'random', 'repeat']:
             return None
