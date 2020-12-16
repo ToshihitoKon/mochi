@@ -4,13 +4,15 @@ from v1.models import daifuku as daifukuv1
 from v2.music import handler as musicv2
 from v2.okonomi import handler as okonomi
 from v2.tako import handler as tako
+from v2.script_kicker import handler as script_kicker
 
 
 # v2
 blueprints = [
     musicv2.music_router,
     okonomi.router,
-    tako.router
+    tako.router,
+    script_kicker.router
 ]
 
 ###
