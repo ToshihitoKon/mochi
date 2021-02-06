@@ -1,0 +1,3 @@
+MOCHI_APP_ROOT=/home/app/mochi
+MOCHI_TAKO_ROOT=/home/app/tako
+MOCHI_OKONOMI_PATH=/home/app/okonomi/kvs.sh

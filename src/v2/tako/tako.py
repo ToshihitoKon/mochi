@@ -4,7 +4,7 @@ import os
 class Model:
     def __init__(self, config):
         self.config = config
-        self.save_dir = config.must('MOCHI_TAKO_PATH')
+        self.save_dir = config.must('MOCHI_TAKO_ROOT')
 
     def save_file(self, data):
         filename = data.filename

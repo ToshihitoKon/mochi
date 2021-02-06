@@ -3,6 +3,7 @@ Description=controll mpd api server
 After=network-online.target
 
 [Service]
+EnvironmentFile=/home/app/mochi/env
 ExecStart=/home/app/mochi/run.sh
 ExecStop=/bin/kill -INT ${MAINPID}
 Restart=always

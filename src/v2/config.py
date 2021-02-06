@@ -7,7 +7,7 @@ class Config:
         _err_msg = []
         _env_list = [
             'MOCHI_APP_ROOT',
-            'MOCHI_TAKO_PATH',
+            'MOCHI_TAKO_ROOT',
             'MOCHI_OKONOMI_PATH',
         ]
 
