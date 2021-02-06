@@ -127,7 +127,6 @@ class Music:
             res = self.model.cancel_sleeptimer()
             return json.dumps(res, ensure_ascii=False), 200
 
-
         @router.route('/search/fetchall', methods=['GET'])
         def file_fetchall():
             res = self.model.fetch_musicdir()

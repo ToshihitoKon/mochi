@@ -1,10 +1,16 @@
 import os
 import subprocess
 
-okonomi_dir = os.path.expanduser('~/okonomi')
-class Okonomi:
+def get_model(config):
+    return Model(config)
+
+class Model:
+    def __init__(self, config):
+        self.config = config
+        self.okonomi_path = config.must('MOCHI_OKONOMI_PATH')
+
     def get_value(self, keys):
-        res = subprocess.run([ okonomi_dir + '/kvs.sh', 'get'] + keys , stdout=subprocess.PIPE)
+        res = subprocess.run([ self.okonomi_path, 'get'] + keys , stdout=subprocess.PIPE)
 
         kv = []
         rows = res.stdout.decode('utf-8').splitlines()
@@ -15,7 +21,7 @@ class Okonomi:
         return kv
 
     def get_group_value(self, group):
-        res = subprocess.run([ okonomi_dir + '/kvs.sh', 'getgroup', group], stdout=subprocess.PIPE)
+        res = subprocess.run([ self.okonomi_path + '/kvs.sh', 'getgroup', group], stdout=subprocess.PIPE)
 
         kv = []
         rows = res.stdout.decode('utf-8').splitlines()
@@ -26,15 +32,15 @@ class Okonomi:
         return kv
 
     def set_value(self, key, value, group):
-        res = subprocess.run([ okonomi_dir + '/kvs.sh', 'set', key, value, group] , stdout=subprocess.PIPE)
+        res = subprocess.run([ self.okonomi_path, 'set', key, value, group] , stdout=subprocess.PIPE)
         return {'key': key, 'value': value}
 
     def set_group(self, key, group):
-        res = subprocess.run([ okonomi_dir + '/kvs.sh', 'setgroup', key, group] , stdout=subprocess.PIPE)
+        res = subprocess.run([ self.okonomi_path, 'setgroup', key, group] , stdout=subprocess.PIPE)
         return {'key': key, 'group': group}
 
     def toggle_value(self, key):
-        res = subprocess.run([ okonomi_dir + '/kvs.sh', 'toggle', key] , stdout=subprocess.PIPE)
+        res = subprocess.run([ self.okonomi_path, 'toggle', key] , stdout=subprocess.PIPE)
         if not res.stdout:
             return {'key': key, 'value': ''}
 
@@ -42,17 +48,9 @@ class Okonomi:
         return {'key': key, 'value': value}
 
     def list_keys(self):
-        res = subprocess.run([ okonomi_dir + '/kvs.sh', 'list'] , stdout=subprocess.PIPE)
+        res = subprocess.run([ self.okonomi_path, 'list'] , stdout=subprocess.PIPE)
         return res.stdout.decode('utf-8').splitlines()
 
     def list_groups(self):
-        res = subprocess.run([ okonomi_dir + '/kvs.sh', 'listgroup'] , stdout=subprocess.PIPE)
+        res = subprocess.run([ self.okonomi_path, 'listgroup'] , stdout=subprocess.PIPE)
         return res.stdout.decode('utf-8').splitlines()
-
-if __name__ == '__main__':
-    print(Okonomi().get_value(['key', 'key3']))
-    print(Okonomi().list_groups())
-    print(Okonomi().get_group_value('group'))
-    print(Okonomi().set_value('key', 'false'))
-    print(Okonomi().toggle_value('key'))
-    print(Okonomi().list_keys())

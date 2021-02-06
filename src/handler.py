@@ -12,9 +12,9 @@ cfg = Config()
 # v2
 blueprints = [
     musicv2.Music(cfg).get_router(),
-    okonomi.router,
+    okonomi.Okonomi(cfg).get_router(),
     tako.Tako(cfg).get_router(),
-    script_kicker.router
+    script_kicker.ScriptKicker(cfg).get_router()
 ]
 
 ###

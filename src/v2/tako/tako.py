@@ -1,6 +1,9 @@
 import flask
 import os
 
+def get_model(config):
+    return Model(config)
+
 class Model:
     def __init__(self, config):
         self.config = config
@@ -25,9 +28,3 @@ class Model:
                     as_attachment=False)
         except:
             return False
-
-def get_model(config):
-    return Model(config)
-        
-if __name__ == "__main__":
-    print(Model().list_file())

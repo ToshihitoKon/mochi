@@ -1,64 +1,74 @@
-from . import okonomi as model
+from . import okonomi
 from flask import Blueprint, request
 import json
 
-router = Blueprint('okonomi', __name__, url_prefix='/api/v2/okonomi')
+class Okonomi:
+    def get_router(self): 
+        return self.router
 
-@router.route('/get', methods=['GET'])
-def get():
-    key = request.args.get('key')
-    if key:
-        res = model.Okonomi().get_value([key])
-    else:
-        res = model.Okonomi().list_keys()
+    def __init__ (self, config):
+        self.config = config
+        self.model = okonomi.get_model(config)
 
-    return json.dumps(res, ensure_ascii=False), 200
+        router = Blueprint('okonomi', __name__, url_prefix='/api/v2/okonomi')
 
-@router.route('/set', methods=['POST'])
-def set():
-    req = request.get_json()
-    if not req:
-        return json.dumps(':thinking_face:', ensure_ascii=False), 400
+        @router.route('/get', methods=['GET'])
+        def get():
+            key = request.args.get('key')
+            if key:
+                res = self.model.get_value([key])
+            else:
+                res = self.model.list_keys()
 
-    if 'key' not in req:
-        return json.dumps('key must be required', ensure_ascii=False), 400
-    key = req['key']
+            return json.dumps(res, ensure_ascii=False), 200
 
-    if 'value' not in req:
-        return json.dumps('value must be required', ensure_ascii=False), 400
-    value = req['value']
+        @router.route('/set', methods=['POST'])
+        def set():
+            req = request.get_json()
+            if not req:
+                return json.dumps(':thinking_face:', ensure_ascii=False), 400
 
-    group = ''
-    if 'group' in req:
-        group = req['group']
+            if 'key' not in req:
+                return json.dumps('key must be required', ensure_ascii=False), 400
+            key = req['key']
 
-    res = model.Okonomi().set_value(key, value, group)
-    return json.dumps(res, ensure_ascii=False), 200
+            if 'value' not in req:
+                return json.dumps('value must be required', ensure_ascii=False), 400
+            value = req['value']
 
-@router.route('/toggle', methods=['POST'])
-def toggle():
-    req = request.get_json()
-    if not req:
-        return json.dumps(':thinking_face:', ensure_ascii=False), 400
+            group = ''
+            if 'group' in req:
+                group = req['group']
 
-    if 'key' not in req:
-        return json.dumps('key must be required', ensure_ascii=False), 400
-    key = req['key']
+            res = self.model.set_value(key, value, group)
+            return json.dumps(res, ensure_ascii=False), 200
 
-    res = model.Okonomi().toggle_value(req['key'])
-    return json.dumps(res, ensure_ascii=False), 200
+        @router.route('/toggle', methods=['POST'])
+        def toggle():
+            req = request.get_json()
+            if not req:
+                return json.dumps(':thinking_face:', ensure_ascii=False), 400
 
-@router.route('/group/get', methods=['GET'])
-def group_get():
-    group = request.args.get('group')
-    if not group:
-        return json.dumps('', ensure_ascii=False), 400
-    else:
-        res = model.Okonomi().get_group_value(group)
+            if 'key' not in req:
+                return json.dumps('key must be required', ensure_ascii=False), 400
+            key = req['key']
 
-    return json.dumps(res, ensure_ascii=False), 200
+            res = self.model.toggle_value(req['key'])
+            return json.dumps(res, ensure_ascii=False), 200
 
-@router.route('/group/list', methods=['GET'])
-def group_list():
-    res = model.Okonomi().list_groups()
-    return json.dumps(res, ensure_ascii=False), 200
+        @router.route('/group/get', methods=['GET'])
+        def group_get():
+            group = request.args.get('group')
+            if not group:
+                return json.dumps('', ensure_ascii=False), 400
+            else:
+                res = self.model.get_group_value(group)
+
+            return json.dumps(res, ensure_ascii=False), 200
+
+        @router.route('/group/list', methods=['GET'])
+        def group_list():
+            res = self.model.list_groups()
+            return json.dumps(res, ensure_ascii=False), 200
+        
+        self.router = router
