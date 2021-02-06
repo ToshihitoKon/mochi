@@ -8,6 +8,9 @@ class FlaskWrap:
         self.flask = Flask(__name__)
         CORS(self.flask)
 
+    def register_blueprint(self, router):
+        self.flask.register_blueprint(router)
+
     def set_handler(self, path, handle_func, methods):
         self.flask.add_url_rule(path, view_func=handle_func, methods=methods) 
     
@@ -18,7 +21,7 @@ flask = FlaskWrap()
 app = flask.flask
 
 for router in blueprints:
-    flask.flask.register_blueprint(router)
+    flask.register_blueprint(router)
 
 # v1の遺産
 for flask_handler in flask_handlers:

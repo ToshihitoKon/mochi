@@ -1,28 +1,38 @@
-from . import tako as model
+from . import tako
 from flask import Blueprint, request
 import json
 
-router = Blueprint('tako', __name__, url_prefix='/api/v2/tako')
+class Tako:
+    def __init__ (self, config):
+        self.config = config
+        self.model = tako.get_model(config)
 
-@router.route('/data/upload', methods=['POST'])
-def upload_multipart():
-    if 'uploadFile' not in request.files:
-        return json.dumps('', ensure_ascii=False), 400
+        router = Blueprint('tako', __name__, url_prefix='/api/v2/tako')
 
-    recievedFile = request.files['uploadFile']
-    if model.Tako().save_file(recievedFile):
-        return json.dumps('ok', ensure_ascii=False), 200
-    else:
-        return json.dumps('failed', ensure_ascii=False), 500
+        @router.route('/data/upload', methods=['POST'])
+        def upload_multipart():
+            if 'uploadFile' not in request.files:
+                return json.dumps('', ensure_ascii=False), 400
 
-@router.route('/list', methods=['GET'])
-def list():
-    filelist = model.Tako().list_file()
-    return json.dumps(filelist, ensure_ascii=False), 200
+            recievedFile = request.files['uploadFile']
+            if self.model.save_file(recievedFile):
+                return json.dumps('ok', ensure_ascii=False), 200
+            else:
+                return json.dumps('failed', ensure_ascii=False), 500
 
-@router.route('/data/get/<string:path>', methods=['GET'])
-def get_file(path):
-    target = model.Tako().serve_file(path)
-    if not target:
-        return json.dumps('', ensure_ascii=False), 404
-    return target
+        @router.route('/list', methods=['GET'])
+        def list():
+            filelist = self.model.list_file()
+            return json.dumps(filelist, ensure_ascii=False), 200
+
+        @router.route('/data/get/<string:path>', methods=['GET'])
+        def get_file(path):
+            target = self.model.serve_file(path)
+            if not target:
+                return json.dumps('', ensure_ascii=False), 404
+            return target
+
+        self.router = router
+
+    def get_router(self): 
+        return self.router
