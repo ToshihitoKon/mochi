@@ -11,7 +11,7 @@ from v2.script_kicker import handler as script_kicker
 cfg = Config()
 # v2
 blueprints = [
-    musicv2.music_router,
+    musicv2.Music(cfg).get_router(),
     okonomi.router,
     tako.Tako(cfg).get_router(),
     script_kicker.router

@@ -4,7 +4,9 @@ import pathlib
 import os
 
 format_option = ['-f', '%position%\t%title%\t%artist%\t%album%\t%file%']
-mochi_dir = os.path.expanduser('~/mochi')
+
+def get_model(config):
+    return Model(config)
 
 # listallのパース
 def nestedupdate(srcdict, destdict):
@@ -20,8 +22,7 @@ def nestedupdate(srcdict, destdict):
             destdict[k] = v
     return destdict
 
-
-class Mpd:
+class Model:
     is_playing = False
     title = ''
     artist = ''
@@ -37,6 +38,10 @@ class Mpd:
     single = False
     consume = False
     sleeptimer = False
+
+    def __init__(self, config):
+        self.config = config
+        self.mochi_dir = config.must('MOCHI_APP_ROOT')
     
     def parse_mpc_output(self, output):
         if output.find('ERROR') != -1:
@@ -226,7 +231,7 @@ class Mpd:
 
     def reset_sleeptimer(self):
         subprocess.run(['pkill' , 'sleep'])
-        subprocess.Popen([ mochi_dir + '/sleep.sh', '&'])
+        subprocess.Popen([ self.mochi_dir + '/sleep.sh', '&'])
 
         res = subprocess.run(['mpc'] + format_option + ['status'] , stdout=subprocess.PIPE)
         if not self.parse_mpc_output(res.stdout.decode('utf-8')):

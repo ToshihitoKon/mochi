@@ -1,3 +1,4 @@
 MOCHI_APP_ROOT=/home/app/mochi
-MOCHI_TAKO_ROOT=/home/app/tako
+MOCHI_TAKO_RAW_ROOT=/home/app/tako/raw
+MOCHI_TAKO_THUMBNAIL_ROOT=/home/app/tako/thumbnail
 MOCHI_OKONOMI_PATH=/home/app/okonomi/kvs.sh
