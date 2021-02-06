@@ -21,7 +21,7 @@ class Model:
         return kv
 
     def get_group_value(self, group):
-        res = subprocess.run([ self.okonomi_path + '/kvs.sh', 'getgroup', group], stdout=subprocess.PIPE)
+        res = subprocess.run([ self.okonomi_path, 'getgroup', group], stdout=subprocess.PIPE)
 
         kv = []
         rows = res.stdout.decode('utf-8').splitlines()
