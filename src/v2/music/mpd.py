@@ -111,20 +111,20 @@ class Model:
     def status_object(self):
         return {
                 'isplaying': self._is_playing,
-                '_artist': self._artist,
-                '_title': self._title,
-                '_playlist_position': self._playlist_pos,
-                '_album': self._album,
-                '_filepath': self._filepath,
-                '_duration': self._duration,
-                '_total': self._total,
-                '_progress': self._progress,
-                '_volume': self._volume,
-                '_repeat': self._repeat,
-                '_random': self._random,
-                '_single': self._single,
-                '_consume': self._consume,
-                '_sleeptimer': self._sleeptimer
+                'artist': self._artist,
+                'title': self._title,
+                'playlist_position': self._playlist_pos,
+                'album': self._album,
+                'filepath': self._filepath,
+                'duration': self._duration,
+                'total': self._total,
+                'progress': self._progress,
+                'volume': self._volume,
+                'repeat': self._repeat,
+                'random': self._random,
+                'single': self._single,
+                'consume': self._consume,
+                'sleeptimer': self._sleeptimer
         }
 
     def get_status(self):
