@@ -3,7 +3,7 @@ import regex
 import pathlib
 import os
 
-format_option = ['-f', '%position%\t%_title%\t%_artist%\t%_album%\t%file%']
+format_option = ['-f', '%position%\t%title%\t%artist%\t%album%\t%file%']
 
 def get_model(config):
     return Model(config)
