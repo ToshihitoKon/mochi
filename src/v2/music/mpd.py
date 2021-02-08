@@ -3,7 +3,7 @@ import regex
 import pathlib
 import os
 
-format_option = ['-f', '%position%\t%title%\t%artist%\t%album%\t%file%']
+format_option = ['-f', '%position%\t%_title%\t%_artist%\t%_album%\t%file%']
 
 def get_model(config):
     return Model(config)
@@ -23,21 +23,21 @@ def nestedupdate(srcdict, destdict):
     return destdict
 
 class Model:
-    is_playing = False
-    title = ''
-    artist = ''
-    playlist_pos = -1
-    album = ''
-    filepath = ''
-    volume = -1
-    duration = -1
-    total = -1
-    progress = -1
-    repeat = False
-    random = False
-    single = False
-    consume = False
-    sleeptimer = False
+    _is_playing = False
+    _title = ''
+    _artist = ''
+    _playlist_pos = -1
+    _album = ''
+    _filepath = ''
+    _volume = -1
+    _duration = -1
+    _total = -1
+    _progress = -1
+    _repeat = False
+    _random = False
+    _single = False
+    _consume = False
+    _sleeptimer = False
 
     def __init__(self, config):
         self.config = config
@@ -50,37 +50,37 @@ class Model:
 
         res = subprocess.run("ps aux | grep sleep.sh | grep -v grep" , shell=True, stdout=subprocess.PIPE)
         if not res.stdout.decode('utf-8'):
-            self.sleeptimer = False
+            self._sleeptimer = False
         else:
-            self.sleeptimer = True
+            self._sleeptimer = True
 
 
         try:
             rows = output.splitlines()
             if len(rows) == 1:
                 # song not set
-                self.title = ''
-                self.artist = ''
-                self.is_playing = False
+                self._title = ''
+                self._artist = ''
+                self._is_playing = False
                 status_line = rows[0]
             elif len(rows) == 3:
                 # song set
                 song_line = rows[0].split('\t')
-                self.playlist_pos = song_line[0]
-                self.title = song_line[1]
-                self.artist = song_line[2]
-                self.album = song_line[3]
-                self.filepath =  song_line[4]
+                self._playlist_pos = song_line[0]
+                self._title = song_line[1]
+                self._artist = song_line[2]
+                self._album = song_line[3]
+                self._filepath =  song_line[4]
 
                 player_line = rows[1]
-                self.is_playing = (player_line.find('playing') != -1)
+                self._is_playing = (player_line.find('playing') != -1)
                 song_length =  regex.search(r'(?P<dur>\d+:\d+)/(?P<tot>\d+:\d+).*\((?P<pro>\d+)%\)', player_line)
-                self.progress = song_length.group('pro')
+                self._progress = song_length.group('pro')
 
                 split_duration = song_length.group('dur').split(':')
-                self.duration = int(split_duration[0])*60 + int(split_duration[1])
+                self._duration = int(split_duration[0])*60 + int(split_duration[1])
                 split_total = song_length.group('tot').split(':')
-                self.total = int(split_total[0])*60 + int(split_total[1])
+                self._total = int(split_total[0])*60 + int(split_total[1])
 
 
                 status_line = rows[2]
@@ -96,35 +96,35 @@ class Model:
 
             volume = status_match.group('vol').replace('%', '')
             if volume.isdecimal():
-                self.volume = int(volume)
+                self._volume = int(volume)
             else:
-                self.volume = -1
+                self._volume = -1
 
-            self.repeat = status_match.group('rep') == "on"
-            self.random = status_match.group('ran') == "on"
-            self.single = status_match.group('sin') == "on"
-            self.consume = status_match.group('con') == "on"
+            self._repeat = status_match.group('rep') == "on"
+            self._random = status_match.group('ran') == "on"
+            self._single = status_match.group('sin') == "on"
+            self._consume = status_match.group('con') == "on"
             return True
         except:
             return False
 
     def status_object(self):
         return {
-                'isplaying': self.is_playing,
-                'artist': self.artist,
-                'title': self.title,
-                'playlist_position': self.playlist_pos,
-                'album': self.album,
-                'filepath': self.filepath,
-                'duration': self.duration,
-                'total': self.total,
-                'progress': self.progress,
-                'volume': self.volume,
-                'repeat': self.repeat,
-                'random': self.random,
-                'single': self.single,
-                'consume': self.consume,
-                'sleeptimer': self.sleeptimer
+                'isplaying': self._is_playing,
+                '_artist': self._artist,
+                '_title': self._title,
+                '_playlist_position': self._playlist_pos,
+                '_album': self._album,
+                '_filepath': self._filepath,
+                '_duration': self._duration,
+                '_total': self._total,
+                '_progress': self._progress,
+                '_volume': self._volume,
+                '_repeat': self._repeat,
+                '_random': self._random,
+                '_single': self._single,
+                '_consume': self._consume,
+                '_sleeptimer': self._sleeptimer
         }
 
     def get_status(self):
@@ -222,7 +222,7 @@ class Model:
         for row in res.stdout.decode('utf-8').splitlines():
             dirlist = row.split('/')
             filename = dirlist.pop()
-            ld =  {'_files': [filename]}
+            ld =  {'files': [filename]}
             for entry in reversed(dirlist):
                 ld = {entry: ld}
             nestedupdate(ld,response_dict)
