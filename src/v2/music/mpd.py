@@ -222,7 +222,7 @@ class Model:
         for row in res.stdout.decode('utf-8').splitlines():
             dirlist = row.split('/')
             filename = dirlist.pop()
-            ld =  {'files': [filename]}
+            ld =  {'_files': [filename]}
             for entry in reversed(dirlist):
                 ld = {entry: ld}
             nestedupdate(ld,response_dict)
