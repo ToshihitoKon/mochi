@@ -11,11 +11,15 @@ class Tako:
 
         @router.route('/data/upload', methods=['POST'])
         def upload_multipart():
-            if 'uploadFile' not in request.files:
+            if 'file' not in request.files:
                 return json.dumps('', ensure_ascii=False), 400
 
-            recievedFile = request.files['uploadFile']
-            if self.model.save_file(recievedFile):
+            recievedFiles = request.files['file']
+            print(type(recievedFiles))
+
+            if recievedFiles.filename == '':
+                return json.dumps('no selected file', ensure_ascii=False), 400
+            if self.model.save_file(recievedFiles):
                 return json.dumps('ok', ensure_ascii=False), 200
             else:
                 return json.dumps('failed', ensure_ascii=False), 500

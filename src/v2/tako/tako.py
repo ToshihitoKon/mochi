@@ -19,8 +19,9 @@ class Model:
         return True
 
     def list_file(self):
+        # thumbnail生成がないのでとりあえずrawを返す
         ls = os.listdir(self._raw_dir)
-        return [x for x in ls if x != 'thumbnail']
+        return ls
 
     def serve_file(self, path):
         try:
