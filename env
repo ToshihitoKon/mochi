@@ -1,4 +1,5 @@
-MOCHI_APP_ROOT=/home/app/mochi
-MOCHI_TAKO_RAW_ROOT=/home/app/tako/raw
-MOCHI_TAKO_THUMBNAIL_ROOT=/home/app/tako/thumbnail
-MOCHI_OKONOMI_PATH=/home/app/okonomi/kvs.sh
+MOCHI_APP_ROOT=/path/to/mochi/
+MOCHI_TAKO_RAW_ROOT=/path/to/tako/raw/
+MOCHI_TAKO_THUMBNAIL_ROOT=/path/to/tako/thumbnail/
+MOCHI_OKONOMI_PATH=/path/to/okonomi/kvs.sh
+MOCHI_NATUREREMO_TOKEN=natureremotoken

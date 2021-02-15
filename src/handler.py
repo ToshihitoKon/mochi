@@ -5,7 +5,6 @@ from v2.config import Config
 from v2.music import handler as musicv2
 from v2.okonomi import handler as okonomi
 from v2.tako import handler as tako
-from v2.script_kicker import handler as script_kicker
 
 
 cfg = Config()
@@ -14,7 +13,6 @@ blueprints = [
     musicv2.Music(cfg).get_router(),
     okonomi.Okonomi(cfg).get_router(),
     tako.Tako(cfg).get_router(),
-    script_kicker.ScriptKicker(cfg).get_router()
 ]
 
 ###

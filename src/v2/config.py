@@ -10,6 +10,7 @@ class Config:
             'MOCHI_TAKO_RAW_ROOT',
             'MOCHI_TAKO_THUMBNAIL_ROOT',
             'MOCHI_OKONOMI_PATH',
+            'MOCHI_NATUREREMO_TOKEN'
         ]
 
         for _env in _env_list:
