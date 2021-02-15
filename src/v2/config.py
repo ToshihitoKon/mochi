@@ -2,34 +2,40 @@ import os
 import sys
 
 class Config:
+    _prefix='MOCHI_'
+
     def __init__ (self):
         env = dict()
         _err_msg = []
         _env_list = [
-            'MOCHI_APP_ROOT',
-            'MOCHI_TAKO_RAW_ROOT',
-            'MOCHI_TAKO_THUMBNAIL_ROOT',
-            'MOCHI_OKONOMI_PATH',
-            'MOCHI_NATUREREMO_TOKEN'
+            'APP_ROOT',
+            'TAKO_RAW_ROOT',
+            'TAKO_THUMBNAIL_ROOT',
+            'OKONOMI_PATH',
+            'NATUREREMO_TOKEN',
+            'NATUREREMO_LIGHT_SIGSWITCH',
+            'NATUREREMO_LIGHT_SIGWARM',
+            'NATUREREMO_LIGHT_SIGCOOL',
         ]
 
         for _env in _env_list:
-            e = os.getenv(_env)
+            e = os.getenv(self._prefix + _env)
             if e == None:
-                _err_msg.append('env ' + _env + ' must be set')
-            env[_env] = e
+                _err_msg.append('env ' + _prefix + _env + ' must be set')
+            env[self._prefix+_env] = e
             e = ''
 
         if len(_err_msg) != 0:
-            print(_err_msg)
+            for msg in _err_msg:
+                print(msg)
             sys.exit(1)
 
         self.ENV = env
 
     def get (self, key):
-        if 'MOCHI_'+key in self.ENV:
-            return self.ENV['MOCHI_'+key]
-        print('err: Config: ' + 'MOCHI_' + key + ' not set')
+        if self._prefix+key in self.ENV:
+            return self.ENV[self._prefix+key]
+        print('err: Config: ' + self._prefix + key + ' not set')
         sys.exit(1)
 
 if __name__ == '__main__':
