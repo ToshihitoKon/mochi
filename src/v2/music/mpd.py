@@ -41,7 +41,7 @@ class Model:
 
     def __init__(self, config):
         self.config = config
-        self.mochi_dir = config.must('MOCHI_APP_ROOT')
+        self.mochi_dir = config.get('APP_ROOT')
     
     def parse_mpc_output(self, output):
         if output.find('ERROR') != -1:

@@ -7,8 +7,8 @@ def get_model(config):
 class Model:
     def __init__(self, config):
         self._config = config
-        self._raw_dir = config.must('MOCHI_TAKO_RAW_ROOT')
-        self._thumbnail_dir = config.must('MOCHI_TAKO_THUMBNAIL_ROOT')
+        self._raw_dir = config.get('TAKO_RAW_ROOT')
+        self._thumbnail_dir = config.get('TAKO_THUMBNAIL_ROOT')
 
     def save_file(self, data):
         filename = data.filename

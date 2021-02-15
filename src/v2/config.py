@@ -14,9 +14,11 @@ class Config:
         ]
 
         for _env in _env_list:
-            env[_env] = os.getenv(_env)
-            if env[_env] == None:
+            e = os.getenv(_env)
+            if e == None:
                 _err_msg.append('env ' + _env + ' must be set')
+            env[_env] = e
+            e = ''
 
         if len(_err_msg) != 0:
             print(_err_msg)
@@ -25,20 +27,11 @@ class Config:
         self.ENV = env
 
     def get (self, key):
-        if key in self.ENV:
-            return self.ENV[key]
-        return None
-
-    def must(self, key):
-        if key in self.ENV:
-            return self.ENV[key]
-        print('err: Config: ' + key + ' not set')
+        if 'MOCHI_'+key in self.ENV:
+            return self.ENV['MOCHI_'+key]
+        print('err: Config: ' + 'MOCHI_' + key + ' not set')
         sys.exit(1)
-
 
 if __name__ == '__main__':
     c = Config()
-    print(c.get('MOCHI_APP_ROOT'))
-    print(c.get('aaa'))
-    print(c.must('MOCHI_APP_ROOT'))
-    print(c.must('aaa'))
+    print(c.get('APP_ROOT'))

@@ -7,7 +7,7 @@ def get_model(config):
 class Model:
     def __init__(self, config):
         self.config = config
-        self.okonomi_path = config.must('MOCHI_OKONOMI_PATH')
+        self.okonomi_path = config.get('OKONOMI_PATH')
 
     def get_value(self, keys):
         res = subprocess.run([ self.okonomi_path, 'get'] + keys , stdout=subprocess.PIPE)
