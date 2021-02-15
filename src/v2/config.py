@@ -16,12 +16,14 @@ class Config:
             'NATUREREMO_LIGHT_SIGSWITCH',
             'NATUREREMO_LIGHT_SIGWARM',
             'NATUREREMO_LIGHT_SIGCOOL',
+            'NATUREREMO_LIGHT_SIGBRIGHT',
+            'NATUREREMO_LIGHT_SIGDIM',
         ]
 
         for _env in _env_list:
             e = os.getenv(self._prefix + _env)
             if e == None:
-                _err_msg.append('env ' + _prefix + _env + ' must be set')
+                _err_msg.append('env ' + self._prefix + _env + ' must be set')
             env[self._prefix+_env] = e
             e = ''
 
