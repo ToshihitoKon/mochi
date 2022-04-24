@@ -11,60 +11,86 @@ class Model:
         self._config = config
         self._natureremo = {
             'token': config.get('NATUREREMO_TOKEN'),
-            'light': {
-                'switch': config.get('NATUREREMO_LIGHT_SIGSWITCH'),
-                'warm': config.get('NATUREREMO_LIGHT_SIGWARM'),
-                'cool': config.get('NATUREREMO_LIGHT_SIGCOOL'),
-                'bright': config.get('NATUREREMO_LIGHT_SIGBRIGHT'),
-                'dim': config.get('NATUREREMO_LIGHT_SIGDIM'),
+            'appliance': config.get('NATUREREMO_LIGHT_APPLIANCE'),
+            'button': {
+                'on': config.get('NATUREREMO_LIGHT_BUTTON_ON'),
+                'off': config.get('NATUREREMO_LIGHT_BUTTON_OFF'),
+                'bright': config.get('NATUREREMO_LIGHT_BUTTON_BLIGHT'),
+                'dim': config.get('NATUREREMO_LIGHT_BUTTON_DIM'),
+                'warm': config.get('NATUREREMO_LIGHT_BUTTON_WARM'),
+                'cool': config.get('NATUREREMO_LIGHT_BUTTON_COOL'),
+                'preset_on': config.get('NATUREREMO_LIGHT_BUTTON_PRESET_ON'),
+            },
+            'signal': {
+                'preset_warm':config.get('NATUREREMO_LIGHT_SIGNAL_PRESET_WARM'),   
             }
         } 
 
-    def lightSwitch(self):
-        url = 'https://api.nature.global/1/signals/'+self._natureremo['light']['switch']+'/send'
-        return self.natureremoSend(url)
+    def lightOn(self):
+        return self.natureremoSendButton(self._natureremo['button']['on'])
+
+    def lightOff(self):
+        return self.natureremoSendButton(self._natureremo['button']['off'])
+
+    def lightPresetWarm(self):
+        return self.natureremoSendSignal(self._natureremo['signal']['preset_warm'])
+
+    def lightPresetOn(self):
+        return self.natureremoSendButton(self._natureremo['button']['preset_on'])
 
     def lightWarm(self):
-        url = 'https://api.nature.global/1/signals/'+self._natureremo['light']['warm']+'/send'
-        return self.natureremoSend(url)
+        return self.natureremoSendButton(self._natureremo['button']['warm'])
 
     def lightCool(self):
-        url = 'https://api.nature.global/1/signals/'+self._natureremo['light']['cool']+'/send'
-        return self.natureremoSend(url)
+        return self.natureremoSendButton(self._natureremo['button']['cool'])
 
     def lightBright(self):
-        url = 'https://api.nature.global/1/signals/'+self._natureremo['light']['bright']+'/send'
-        return self.natureremoSend(url)
+        return self.natureremoSendButton(self._natureremo['button']['bright'])
 
     def lightDim(self):
-        url = 'https://api.nature.global/1/signals/'+self._natureremo['light']['dim']+'/send'
-        return self.natureremoSend(url)
+        return self.natureremoSendButton(self._natureremo['button']['dim'])
 
-    def lightSwitch(self):
-        url = 'https://api.nature.global/1/signals/'+self._natureremo['light']['switch']+'/send'
-        return self.natureremoSend(url)
+    def natureremoSendButton(self, button):
+        url = f"https://api.nature.global/1/appliances/{self._natureremo['appliance']}/light"
+        data = urllib.parse.urlencode({
+                'button': button,
+            })
+        print(data)
+        headers = {
+            'accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Bearer '+self._natureremo['token'],
+        }
+        return self._send(url, data.encode('utf-8'), headers)
 
-    def natureremoSend(self, url):
+    def natureremoSendSignal(self, signal):
+        url = f"https://api.nature.global/1/signals/{signal}/send"
         data = {}
         headers = {
             'accept': 'application/json',
             'Authorization': 'Bearer '+self._natureremo['token'],
         }
+        return self._send(url, data, headers)
+
+    def _send(self, url, data, headers):
         req = urllib.request.Request(url, data, headers)
         try:
             res = urllib.request.urlopen(req)
         except urllib.error.HTTPError as e:
+            print(e)
             return False, {
                     'status': e.code,
                     'rate_remaining':e.headers.get('X-Rate-Limit-Remaining', ''),
                     'rate_reset': e.headers.get('X-Rate-Limit-Reset', ''),
                 }
         except Exception as e:
+            print(e)
             return False, {
                     'status': 'error unexpected',
                     'rate_remaining':'',
                     'rate_reset': '',
                 }
+
         return True, {
                 'status': res.code,
                 'rate_remaining':res.headers.get('X-Rate-Limit-Remaining', ''),

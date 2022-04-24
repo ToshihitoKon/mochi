@@ -9,9 +9,30 @@ class Hidamari:
 
         router = Blueprint('hidamari', __name__, url_prefix='/api/v2/hidamari')
 
-        @router.route('/light/switch', methods=['POST'])
-        def lightSwitch():
-            ok, res = self.model.lightSwitch()
+        @router.route('/light/on', methods=['POST'])
+        def lightOn():
+            ok, res = self.model.lightOn()
+            if not ok:
+                return json.dumps(res, ensure_ascii=False), 500
+            return json.dumps(res, ensure_ascii=False), 200
+
+        @router.route('/light/off', methods=['POST'])
+        def lightOff():
+            ok, res = self.model.lightOff()
+            if not ok:
+                return json.dumps(res, ensure_ascii=False), 500
+            return json.dumps(res, ensure_ascii=False), 200
+
+        @router.route('/light/preset_on', methods=['POST'])
+        def lightPresetOn():
+            ok, res = self.model.lightPresetOn()
+            if not ok:
+                return json.dumps(res, ensure_ascii=False), 500
+            return json.dumps(res, ensure_ascii=False), 200
+
+        @router.route('/light/preset_warm', methods=['POST'])
+        def lightPresetWarm():
+            ok, res = self.model.lightPresetWarm()
             if not ok:
                 return json.dumps(res, ensure_ascii=False), 500
             return json.dumps(res, ensure_ascii=False), 200

@@ -13,11 +13,15 @@ class Config:
             'TAKO_THUMBNAIL_ROOT',
             'OKONOMI_PATH',
             'NATUREREMO_TOKEN',
-            'NATUREREMO_LIGHT_SIGSWITCH',
-            'NATUREREMO_LIGHT_SIGWARM',
-            'NATUREREMO_LIGHT_SIGCOOL',
-            'NATUREREMO_LIGHT_SIGBRIGHT',
-            'NATUREREMO_LIGHT_SIGDIM',
+            'NATUREREMO_LIGHT_APPLIANCE',
+            'NATUREREMO_LIGHT_BUTTON_ON',
+            'NATUREREMO_LIGHT_BUTTON_OFF',
+            'NATUREREMO_LIGHT_BUTTON_BLIGHT',
+            'NATUREREMO_LIGHT_BUTTON_DIM',
+            'NATUREREMO_LIGHT_BUTTON_WARM',
+            'NATUREREMO_LIGHT_BUTTON_COOL',
+            'NATUREREMO_LIGHT_BUTTON_PRESET_ON',
+            'NATUREREMO_LIGHT_SIGNAL_PRESET_WARM',
         ]
 
         for _env in _env_list:
